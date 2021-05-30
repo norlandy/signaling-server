@@ -1,23 +1,28 @@
 const http = require('http');
-const fs = require('fs');
-const url = require('url');
+const path = require('path');
+const express = require('express');
 
 const socketServer = require('./socket-server');
 
-const requestListener = (req, res) => {
-	const { pathname } = url.parse(req.url);
+// const requestListener = (req, res) => {
+// 	const { pathname } = url.parse(req.url);
 
-	if (pathname === '/wakemydyno.txt') {
-		return fs.readFile(`${__dirname}/wakemydyno.txt`, (_, data) => {
-			res.writeHead(200);
-			res.end(data);
-		});
-	}
+// 	if (pathname === '/wakemydyno.txt') {
+// 		return fs.readFile(path.join(__dirname, 'wakemydyno.txt'), (_, data) => {
+// 			res.writeHead(200);
+// 			res.end(data);
+// 		});
+// 	}
 
-	res.writeHead(200);
-	res.end();
-};
-const httpServer = http.createServer(requestListener);
+// 	res.writeHead(200);
+// 	res.end();
+// };
+
+const app = express();
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+const httpServer = http.createServer(app);
 
 socketServer(httpServer);
 
